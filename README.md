@@ -18,7 +18,7 @@ Path and Query are returned by the assembler as a `List<string>()` and allow ind
 Build and run the console application in VS/IDE of choice.
 
 ### UriModelAssembler
-Provides access to `UriModel` class - this could be to create a helper library (albiet the internal Uri class is much more substantial). 
+Provides access to `UriModel` class - this could be to create a helper library (albeit the internal Uri class is much more substantial). 
 
 ### TODO List
 * Implement a user input reader to allow URIs to be typed
