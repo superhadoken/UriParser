@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.705
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UrlParser", "UrlParser\UrlParser.csproj", "{AB82AFC0-C380-45E7-9673-C629948AB834}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UrlParser_Tests", "UrlParser_Tests\UrlParser_Tests.csproj", "{A2C7D4E7-70DE-4EA7-9A30-FD0192D73135}"
+	ProjectSection(ProjectDependencies) = postProject
+		{AB82AFC0-C380-45E7-9673-C629948AB834} = {AB82AFC0-C380-45E7-9673-C629948AB834}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AB82AFC0-C380-45E7-9673-C629948AB834}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB82AFC0-C380-45E7-9673-C629948AB834}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB82AFC0-C380-45E7-9673-C629948AB834}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB82AFC0-C380-45E7-9673-C629948AB834}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2C7D4E7-70DE-4EA7-9A30-FD0192D73135}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2C7D4E7-70DE-4EA7-9A30-FD0192D73135}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2C7D4E7-70DE-4EA7-9A30-FD0192D73135}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2C7D4E7-70DE-4EA7-9A30-FD0192D73135}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D667E220-13F3-4DF7-A11F-BC4BEC24B205}
+	EndGlobalSection
+EndGlobal
