@@ -1,6 +1,8 @@
 ﻿using Ninject;
+using System.Linq;
 using System.Reflection;
 using UrlParser.Data;
+using UrlParser.MatchingRules;
 using UrlParser.Services;
 
 namespace UrlParser
@@ -11,14 +13,24 @@ namespace UrlParser
         {
             var kernel = new StandardKernel();
             kernel.Load(Assembly.GetExecutingAssembly());
-            var uriBuilder = kernel.Get<IUriModelAssembler>();
-            var uriPrinterService = kernel.Get<IUriPrinter>();
+            var rules = kernel.GetAll<IMatchingRules>().ToList();
+            var printerServices = kernel.GetAll<IPrinter>().ToList();
+            var ruleResolver = kernel.Get<IMatchingRuleResolver>();
 
             foreach (var uri in Input.Data)
             {
-                var uriModel = uriBuilder.Assemble(uri);
-                uriPrinterService.Print(uriModel);
+                var matchedRules = ruleResolver.ResolveRules(rules, uri);
+
+                foreach (var (ruleSystemName, objectModel) in matchedRules)
+                {
+                    foreach (var printerService in printerServices)
+                    {
+                        if (printerService.SystemName == ruleSystemName)
+                            printerService.Print(objectModel);
+                    }
+                }
             }
         }
+
     }
 }

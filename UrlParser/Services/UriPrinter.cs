@@ -1,29 +1,31 @@
 ﻿using System;
-using UrlParser.Model;
+using UrlParser.MatchingRules;
 
 namespace UrlParser.Services
 {
-    public class UriPrinter : IUriPrinter
+    public class UriPrinter : IPrinter
     {
+        public string SystemName => "uri-breakdown-rule";
         private const string Undefined = "N/A";
 
-        public void Print(UriModel uriModel)
+        public void Print(object uriModel)
         {
-            if (!uriModel.IsValid)
+            var typedUriModel = (UriModel)uriModel;
+            if (uriModel == null)
             {
-                Console.WriteLine($"Not a valid URI - {uriModel.Uri}");
+                Console.WriteLine($"Not a valid URI - {typedUriModel.Uri}");
                 Console.WriteLine();
                 return;
             }
 
-            Console.WriteLine($"URI - {CheckForEmpty(uriModel.Uri)}");
-            Console.WriteLine($"Scheme - {CheckForEmpty(uriModel.Scheme)}");
-            Console.WriteLine($"Authority - {CheckForEmpty(uriModel.Authority)}");
-            Console.WriteLine($"Host - {CheckForEmpty(uriModel.Host)}");
-            Console.WriteLine($"Port - {CheckForEmpty(uriModel.Port)}");
-            Console.WriteLine($"Path - {CheckForEmpty(string.Join(", ", uriModel.PathParams))}");
-            Console.WriteLine($"Query - {CheckForEmpty(string.Join(", ", uriModel.QueryParams))}");
-            Console.WriteLine($"Fragment - {CheckForEmpty(uriModel.Fragment)}");
+            Console.WriteLine($"URI - {CheckForEmpty(typedUriModel.Uri)}");
+            Console.WriteLine($"Scheme - {CheckForEmpty(typedUriModel.Scheme)}");
+            Console.WriteLine($"Authority - {CheckForEmpty(typedUriModel.Authority)}");
+            Console.WriteLine($"Host - {CheckForEmpty(typedUriModel.Host)}");
+            Console.WriteLine($"Port - {CheckForEmpty(typedUriModel.Port)}");
+            Console.WriteLine($"Path - {CheckForEmpty(string.Join(", ", typedUriModel.PathParams))}");
+            Console.WriteLine($"Query - {CheckForEmpty(string.Join(", ", typedUriModel.QueryParams))}");
+            Console.WriteLine($"Fragment - {CheckForEmpty(typedUriModel.Fragment)}");
             Console.WriteLine();
         }
 

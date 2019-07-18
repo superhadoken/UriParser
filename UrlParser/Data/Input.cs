@@ -9,6 +9,7 @@ namespace UrlParser.Data
     {
         public static IEnumerable<string> Data => new List<string>
         {
+            "www.foobar.com",
             "dsjioufskhsauiyfawsiusdhcdxizuyh",
             "http://www.google.com",
             "https://localhost:5000",

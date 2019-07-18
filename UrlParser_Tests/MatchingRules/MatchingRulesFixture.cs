@@ -1,28 +1,29 @@
-﻿using System.Linq;
-using Should;
+﻿using Should;
+using System.Linq;
+using UrlParser.MatchingRules;
 using Xunit;
 
 namespace UrlParser_Tests.MatchingRules
 {
     public class MatchingRulesFixture
     {
-        private readonly UrlParser.MatchingRules.MatchingRules _sut;
+        private readonly UriMatchingRule _sut;
 
         public MatchingRulesFixture()
         {
-            _sut = new UrlParser.MatchingRules.MatchingRules();
+            _sut = new UriMatchingRule();
         }
 
         [Fact]
-        public void IsValidCorrectlyAssesUri()
+        public void AppliesCorrectlyAssesUri()
         {
             // Arrange
             var validUri = "http://www.google.com";
             var invalidUri = "www.google.com";
 
             // Act
-            var isValidResult = _sut.IsValid(validUri);
-            var isInvalidResult = _sut.IsValid(invalidUri);
+            var isValidResult = _sut.Applies(validUri);
+            var isInvalidResult = _sut.Applies(invalidUri);
 
             // Assert
             isValidResult.ShouldBeTrue();
@@ -36,10 +37,11 @@ namespace UrlParser_Tests.MatchingRules
             var uri = "http://www.google.com";
 
             // Act
-            var result = _sut.GetScheme(uri);
+            var result = _sut.BuildModel<UriModel>(uri);
 
             // Assert
-            result.ShouldEqual("http");
+            result.ShouldBeType<UriModel>();
+            result.Scheme.ShouldEqual("http");
         }
 
         [Fact]
@@ -49,10 +51,10 @@ namespace UrlParser_Tests.MatchingRules
             var uri = "sdjkfshfkasjhkjh";
 
             // Act
-            var result = _sut.GetScheme(uri);
+            var result = _sut.BuildModel<UriModel>(uri);
 
             // Assert
-            result.ShouldBeEmpty();
+            result.Scheme.ShouldBeEmpty();
         }
 
         [Fact]
@@ -62,10 +64,10 @@ namespace UrlParser_Tests.MatchingRules
             var uri = "https://john.doe@www.example.com:123/forum/questions/?tag=networking&order=newest#top";
 
             // Act
-            var result = _sut.GetAuthority(uri);
+            var result = _sut.BuildModel<UriModel>(uri);
 
             // Assert
-            result.ShouldEqual("john.doe@www.example.com:123");
+            result.Authority.ShouldEqual("john.doe@www.example.com:123");
         }
 
         [Fact]
@@ -75,10 +77,10 @@ namespace UrlParser_Tests.MatchingRules
             var uri = "notexttomatch";
 
             // Act
-            var result = _sut.GetAuthority(uri);
+            var result = _sut.BuildModel<UriModel>(uri);
 
             // Assert
-            result.ShouldBeEmpty();
+            result.Authority.ShouldBeEmpty();
         }
 
         [Fact]
@@ -88,12 +90,12 @@ namespace UrlParser_Tests.MatchingRules
             var uri = "https://memegenerator.net/img/images/200x/42.jpg";
 
             // Act
-            var result = _sut.GetPathParams(uri);
+            var result = _sut.BuildModel<UriModel>(uri);
 
             // Assert
-            result.ShouldNotBeEmpty();
-            result.Count().ShouldEqual(4);
-            var resultList = result.ToList();
+            result.PathParams.ShouldNotBeEmpty();
+            result.PathParams.Count().ShouldEqual(4);
+            var resultList = result.PathParams.ToList();
             resultList[0].ShouldEqual("img");
             resultList[1].ShouldEqual("images");
             resultList[2].ShouldEqual("200x");
@@ -107,18 +109,17 @@ namespace UrlParser_Tests.MatchingRules
             var uri = "https://www.google.com/search?q=google&rlz=1C1CHBF_enGB854GB854&oq=google&aqs=chrome..69i57j0l2j69i60j69i59j35i39.831j0j4&sourceid=chrome&ie=UTF-8";
 
             // Act
-            var result = _sut.GetQueryParams(uri);
+            var result = _sut.BuildModel<UriModel>(uri);
 
             // Assert
-            result.ShouldNotBeEmpty();
-            result.Count().ShouldEqual(6);
-            var resultList = result.ToList();
-            resultList[0].ShouldEqual("q=google");
-            resultList[1].ShouldEqual("rlz=1c1chbf_engb854gb854");
-            resultList[2].ShouldEqual("oq=google");
-            resultList[3].ShouldEqual("aqs=chrome..69i57j0l2j69i60j69i59j35i39.831j0j4");
-            resultList[4].ShouldEqual("sourceid=chrome");
-            resultList[5].ShouldEqual("ie=utf-8");
+            result.QueryParams.ShouldNotBeEmpty();
+            result.QueryParams.Count.ShouldEqual(6);
+            result.QueryParams["q"].ShouldEqual("google");
+            result.QueryParams["rlz"].ShouldEqual("1c1chbf_engb854gb854");
+            result.QueryParams["oq"].ShouldEqual("google");
+            result.QueryParams["aqs"].ShouldEqual("chrome..69i57j0l2j69i60j69i59j35i39.831j0j4");
+            result.QueryParams["sourceid"].ShouldEqual("chrome");
+            result.QueryParams["ie"].ShouldEqual("utf-8");
         }
 
         [Fact]
@@ -128,10 +129,10 @@ namespace UrlParser_Tests.MatchingRules
             var uri = "www.google.com/searching/index.html";
 
             // Act
-            var result = _sut.GetQueryParams(uri);
+            var result = _sut.BuildModel<UriModel>(uri);
 
             // Assert
-            result.ShouldBeEmpty();
+            result.QueryParams.ShouldBeEmpty();
         }
 
         [Fact]
@@ -141,11 +142,11 @@ namespace UrlParser_Tests.MatchingRules
             var uri = "https://john.doe@www.example.com:123/forum/questions/?tag=networking&order=newest#top";
 
             // Act
-            var result = _sut.GetHost(uri);
+            var result = _sut.BuildModel<UriModel>(uri);
 
             // Assert
-            result.ShouldNotBeEmpty();
-            result.ShouldEqual("www.example.com");
+            result.Host.ShouldNotBeEmpty();
+            result.Host.ShouldEqual("www.example.com");
         }
 
         [Fact]
@@ -155,11 +156,11 @@ namespace UrlParser_Tests.MatchingRules
             var uri = "https://john.doe@www.example.com:123/forum/questions/?tag=networking&order=newest#top";
 
             // Act
-            var result = _sut.GetFragment(uri);
+            var result = _sut.BuildModel<UriModel>(uri);
 
             // Assert
-            result.ShouldNotBeEmpty();
-            result.ShouldEqual("top");
+            result.Fragment.ShouldNotBeEmpty();
+            result.Fragment.ShouldEqual("top");
         }
 
         [Fact]
@@ -169,11 +170,11 @@ namespace UrlParser_Tests.MatchingRules
             var uri = "https://john.doe@www.example.com:123/forum/questions/?tag=networking&order=newest#top";
 
             // Act
-            var result = _sut.GetPort(uri);
+            var result = _sut.BuildModel<UriModel>(uri);
 
             // Assert
-            result.ShouldNotBeEmpty();
-            result.ShouldEqual("123");
+            result.Port.ShouldNotBeEmpty();
+            result.Port.ShouldEqual("123");
         }
 
         [Fact]
@@ -183,10 +184,10 @@ namespace UrlParser_Tests.MatchingRules
             var uri = "http://www.google.com";
 
             // Act
-            var result = _sut.GetPort(uri);
+            var result = _sut.BuildModel<UriModel>(uri);
 
             // Assert
-            result.ShouldBeEmpty();
+            result.Port.ShouldBeEmpty();
         }
     }
 }

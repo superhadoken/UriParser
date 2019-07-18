@@ -9,11 +9,13 @@ namespace UrlParser
         public override void Load()
         {
             // Matching Rules
-            Bind<IMatchingRules>().To<MatchingRules.MatchingRules>();
+            Bind<IMatchingRules>().To<UriMatchingRule>();
+            Bind<IMatchingRules>().To<FooBarMatchingRule>();
+            Bind<IMatchingRuleResolver>().To<MatchingRuleResolver>();
             
             // Services
-            Bind<IUriModelAssembler>().To<UriModelAssembler>();
-            Bind<IUriPrinter>().To<UriPrinter>();
+            Bind<IPrinter>().To<UriPrinter>();
+            Bind<IPrinter>().To<FooBarPrinter>();
         }
     }
 }
